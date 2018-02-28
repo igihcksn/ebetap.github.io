@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on ebetap</title>
+    <link>https://ebetap.github.io/posts/</link>
+    <description>Recent content in Posts on ebetap</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018. All Rights Reserved.</copyright>
+    <lastBuildDate>Tue, 27 Feb 2018 19:00:32 +0700</lastBuildDate>
+    <atom:link href="https://ebetap.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>my first post</title>
+      <link>https://ebetap.github.io/posts/my-first-post/</link>
+      <pubDate>Tue, 27 Feb 2018 19:00:32 +0700</pubDate>
+      
+      <guid>https://ebetap.github.io/posts/my-first-post/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
