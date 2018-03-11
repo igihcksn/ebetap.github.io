@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-  <title>Welcome, this is my first post &middot; ebetap</title>
+  <title>Autentikasi API Menggunakan JSON Web Token - Node.js &middot; ebetap</title>
   <link rel="stylesheet" href="https://ebetap.github.io/css/style.css" />
   <link rel="stylesheet" href="https://ebetap.github.io/css/font-awesome.min.css" />
   <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,600' rel='stylesheet' type='text/css'>
@@ -42,9 +42,9 @@
       </section>
       <div class="post-heading">
         <h1>
-        Welcome, this is my first post
+        Autentikasi API Menggunakan JSON Web Token - Node.js
           <div class="share-icons-header">
-            <a href="http://www.twitter.com/share?url=https%3a%2f%2febetap.github.io%2fposts%2fmy-first-post%2f" target="_blank">
+            <a href="http://www.twitter.com/share?url=https%3a%2f%2febetap.github.io%2fposts%2fautentikasi%2f" target="_blank">
             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 612 612" style="enable-background:new 0 0 612 612;" xml:space="preserve">
             <g>
               <g>
@@ -61,7 +61,7 @@
                   S459.64,584.182,306,584.182S27.818,459.64,27.818,306z"/>
               </g>
             </svg></a>
-            <a href="http://plus.google.com/share?url=https%3a%2f%2febetap.github.io%2fposts%2fmy-first-post%2f" target="_blank">
+            <a href="http://plus.google.com/share?url=https%3a%2f%2febetap.github.io%2fposts%2fautentikasi%2f" target="_blank">
             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 612 612" style="enable-background:new 0 0 612 612;" xml:space="preserve">
               <g>
                 <g>
@@ -82,7 +82,7 @@
                     S459.64,584.182,306,584.182S27.818,459.64,27.818,306z"/>
                 </g>
             </svg></a>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2febetap.github.io%2fposts%2fmy-first-post%2f" target="_blank">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2febetap.github.io%2fposts%2fautentikasi%2f" target="_blank">
             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                viewBox="0 0 612 612" style="enable-background:new 0 0 612 612;" xml:space="preserve">
             <g>
@@ -107,19 +107,173 @@
 
 <section id="content" role="main">
 <section class="entry-meta">
-  <span class="post-date">Feb 27, 2018</span>
+  <span class="post-date">Mar 11, 2018</span>
 </section></header>
 <section class="entry-content">
 <article>
-<pre><code class="language-javascript">	console.log(&quot;Welcome to my blog&quot;);
+<p>Welcome guys, kali ini saya akan berbagi tentang bagaimana cara mengamankan API Routes menggunakan JSON Web Token.
+Untuk membangun API ini saya menggunakan Javascript. So yang harus kalian persiapkan adalah :</p>
+
+<ol>
+<li>Laptop/Komputer yang sudah terinstall operating system (saya pakai linux ubuntu :v );</li>
+<li>Install Node.js</li>
+<li>Install Text-Editor (VS-Code,Sublime,Atom,etc)</li>
+<li>Memahami Basic Programming</li>
+<li>Postman</li>
+<li>Niat..</li>
+</ol>
+
+<p>Mari kita mulai</p>
+
+<p>##Step one</p>
+
+<p>Buka terminal lalu masuk ke direktori project kalian:
+Kemudian buat project folder kalian <code>mkdir jwt</code> kemudian masuk ke dalam project folder kalian <code>cd jwt</code></p>
+
+<p>##Step two</p>
+
+<p>Buat file package.json , ketikan <code>npm init</code> , kemudian masukan informasi tentang project kalian
+oiya kalian juga harus install dulu dependencies jsonwebtoken(JWT) dengan cara <code>npm install nodemon jsonwebtoken</code></p>
+
+<pre><code class="language-javascript">    {
+  &quot;name&quot;: &quot;jwt&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;JWT API auth&quot;,
+  &quot;main&quot;: &quot;app.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
+  },
+  &quot;author&quot;: &quot;beta.priyoko@students.amikom.ac.id&quot;,
+  &quot;license&quot;: &quot;ISC&quot;,
+  &quot;dependencies&quot;: {
+    &quot;express&quot;: &quot;^4.16.2&quot;,
+    &quot;jsonwebtoken&quot;: &quot;^8.2.0&quot;
+  }
+}
 
 </code></pre>
+
+<p>##Step three
+Buat file project ketikan <code>touch app.js</code> di terminal kemudian buka file project kalian
+<code>code app.js</code> . NB: saya menggunakan editor visual studio code.</p>
+
+<p>kemudian masukan kode berikut</p>
+
+<pre><code class="language-javascript">
+const express = require('express');
+const jwt = require('jsonwebtoken');
+
+const app = express();
+
+app.get('/api', (req, res) =&gt; {
+    res.json({
+        message: 'API with JSON Web Token'
+    });
+});
+
+//Server listen port 5000
+app.listen(5000, () =&gt; console.log('App Started at port 5000'));
+
+</code></pre>
+
+<p>Kemudian jalankan dengan cara mengetikan <code>nodemon</code> pada terminal, kemudian klik enter.</p>
+
+<p>Buka postman untuk mengecek API ketikan <code>http://localhost:5000/api</code> kemudian send. pastikan responya seperti ini</p>
+
+<pre><code class="language-javascript">    {
+        message: 'API with JSON Web Token'
+    }
+</code></pre>
+
+<p>##Step Four- Generate token
+Langkah selanjutnya yaitu bagaimana cara si user mendapatkan akses untuk menggunakan API Service kalian,
+dengan JSON web token kita bisa men-generate token. caranaya tambahkan kode berikut di bawah</p>
+
+<pre><code class="language-javascript">    app.get('/api', (req, res) =&gt; {...
+</code></pre>
+
+<pre><code class="language-javascript">//generate token for login
+app.post('/api/login', (req, res) =&gt; {
+    //Mock user
+    const user = {
+        id:'15.11.8912',
+        name: 'Beta Priyoko',
+        email: 'beta.priyoko@students.amikom.ac.id',
+        class: '15-IF-06'
+    }
+
+    jwt.sign({user},'secretkey' ,{expiresIn:'3600s'},(err,token) =&gt; {
+        res.json({
+            token
+        });
+    });
+});
+
+</code></pre>
+
+<p>Perlu diketahui user diatas hanya contoh saja, user bisa kalian dapatkan dari database.</p>
+
+<ul>
+<li><code>javascript {expiresIn:'3600s'}</code> artinya token akan kadaluarsa setelah 3600 detik.</li>
+</ul>
+
+<p>save kemudian akses <code>http://localhost:5000/api/login</code> untuk mndapatkan token.</p>
+
+<p>##Step Five
+Buat Routes yang hanya bisa diakses ketika token telah di verifikasi.
+tambahkan kode bertikut:</p>
+
+<pre><code class="language-javascript">    //verify token to get access
+    app.post('/api/service',verifyToken,(req, res) =&gt; {
+        jwt.verify(req.token, 'secretkey',(err, authData) =&gt; { //to verify token
+            if(err){
+                res.sendStatus(403); //Forbiden
+            }else{
+                res.json({
+                    message: 'Access Granted', //Akses Diberikan
+                    authData
+                });
+            }
+        });
+    });
+</code></pre>
+
+<p>ini hanya bisa diakses menggunakan token yang didapat.</p>
+
+<p>##Step Six
+Buat fungsi untuk memverifikasi token.</p>
+
+<pre><code class="language-javascript">    //verify token
+    function verifyToken(req, res, next){
+        //Get Auth Header Value
+        const bearerHeader = req.headers['authorization'];
+        //check if bearerHeader undefined
+        if(bearerHeader !== 'undefined'){
+            //get the token value
+            const bearer = bearerHeader.split(' '); //array ['Authorization','&lt;bearer_token&gt;']
+            //get token from array
+            const bearerToken = bearer[1];
+            //set the token
+            req.token = bearerToken;
+            //next to middleware
+            next();
+        }else{
+            res.sendStatus(403);
+        }
+    }
+</code></pre>
+
+<p>Sekian Tutorial singkat dari saya. Saya butuh masukan untuk membuat postingan selanjutnya lebih berkualitas.</p>
+
+<p>kirim masukan ke : +6283867138187</p>
+
+<p>and lets be friend.</p>
 
 </section>
 <div class="entry-links"></div>
 </article>
 <div class="share-icons-body">
-  <a href="http://www.twitter.com/share?url=https%3a%2f%2febetap.github.io%2fposts%2fmy-first-post%2f" target="_blank">
+  <a href="http://www.twitter.com/share?url=https%3a%2f%2febetap.github.io%2fposts%2fautentikasi%2f" target="_blank">
   <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 612 612" style="enable-background:new 0 0 612 612;" xml:space="preserve">
   <g>
     <g>
@@ -136,7 +290,7 @@
         S459.64,584.182,306,584.182S27.818,459.64,27.818,306z"/>
     </g>
   </svg></a>
-  <a href="http://plus.google.com/share?url=https%3a%2f%2febetap.github.io%2fposts%2fmy-first-post%2f" target="_blank">
+  <a href="http://plus.google.com/share?url=https%3a%2f%2febetap.github.io%2fposts%2fautentikasi%2f" target="_blank">
   <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 612 612" style="enable-background:new 0 0 612 612;" xml:space="preserve">
     <g>
       <g>
@@ -157,7 +311,7 @@
           S459.64,584.182,306,584.182S27.818,459.64,27.818,306z"/>
       </g>
   </svg></a>
-  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2febetap.github.io%2fposts%2fmy-first-post%2f" target="_blank">
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2febetap.github.io%2fposts%2fautentikasi%2f" target="_blank">
   <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
      viewBox="0 0 612 612" style="enable-background:new 0 0 612 612;" xml:space="preserve">
   <g>

@@ -7,16 +7,185 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018. All Rights Reserved.</copyright>
-    <lastBuildDate>Tue, 27 Feb 2018 19:00:32 +0700</lastBuildDate>
+    <lastBuildDate>Sun, 11 Mar 2018 21:32:17 +0700</lastBuildDate>
     <atom:link href="https://ebetap.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>my first post</title>
+      <title>Autentikasi API Menggunakan JSON Web Token - Node.js</title>
+      <link>https://ebetap.github.io/posts/autentikasi/</link>
+      <pubDate>Sun, 11 Mar 2018 21:32:17 +0700</pubDate>
+      
+      <guid>https://ebetap.github.io/posts/autentikasi/</guid>
+      <description>&lt;p&gt;Welcome guys, kali ini saya akan berbagi tentang bagaimana cara mengamankan API Routes menggunakan JSON Web Token.
+Untuk membangun API ini saya menggunakan Javascript. So yang harus kalian persiapkan adalah :&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Laptop/Komputer yang sudah terinstall operating system (saya pakai linux ubuntu :v );&lt;/li&gt;
+&lt;li&gt;Install Node.js&lt;/li&gt;
+&lt;li&gt;Install Text-Editor (VS-Code,Sublime,Atom,etc)&lt;/li&gt;
+&lt;li&gt;Memahami Basic Programming&lt;/li&gt;
+&lt;li&gt;Postman&lt;/li&gt;
+&lt;li&gt;Niat..&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Mari kita mulai&lt;/p&gt;
+
+&lt;p&gt;##Step one&lt;/p&gt;
+
+&lt;p&gt;Buka terminal lalu masuk ke direktori project kalian:
+Kemudian buat project folder kalian &lt;code&gt;mkdir jwt&lt;/code&gt; kemudian masuk ke dalam project folder kalian &lt;code&gt;cd jwt&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;##Step two&lt;/p&gt;
+
+&lt;p&gt;Buat file package.json , ketikan &lt;code&gt;npm init&lt;/code&gt; , kemudian masukan informasi tentang project kalian
+oiya kalian juga harus install dulu dependencies jsonwebtoken(JWT) dengan cara &lt;code&gt;npm install nodemon jsonwebtoken&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    {
+  &amp;quot;name&amp;quot;: &amp;quot;jwt&amp;quot;,
+  &amp;quot;version&amp;quot;: &amp;quot;1.0.0&amp;quot;,
+  &amp;quot;description&amp;quot;: &amp;quot;JWT API auth&amp;quot;,
+  &amp;quot;main&amp;quot;: &amp;quot;app.js&amp;quot;,
+  &amp;quot;scripts&amp;quot;: {
+    &amp;quot;test&amp;quot;: &amp;quot;echo \&amp;quot;Error: no test specified\&amp;quot; &amp;amp;&amp;amp; exit 1&amp;quot;
+  },
+  &amp;quot;author&amp;quot;: &amp;quot;beta.priyoko@students.amikom.ac.id&amp;quot;,
+  &amp;quot;license&amp;quot;: &amp;quot;ISC&amp;quot;,
+  &amp;quot;dependencies&amp;quot;: {
+    &amp;quot;express&amp;quot;: &amp;quot;^4.16.2&amp;quot;,
+    &amp;quot;jsonwebtoken&amp;quot;: &amp;quot;^8.2.0&amp;quot;
+  }
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##Step three
+Buat file project ketikan &lt;code&gt;touch app.js&lt;/code&gt; di terminal kemudian buka file project kalian
+&lt;code&gt;code app.js&lt;/code&gt; . NB: saya menggunakan editor visual studio code.&lt;/p&gt;
+
+&lt;p&gt;kemudian masukan kode berikut&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;
+const express = require(&#39;express&#39;);
+const jwt = require(&#39;jsonwebtoken&#39;);
+
+const app = express();
+
+app.get(&#39;/api&#39;, (req, res) =&amp;gt; {
+    res.json({
+        message: &#39;API with JSON Web Token&#39;
+    });
+});
+
+//Server listen port 5000
+app.listen(5000, () =&amp;gt; console.log(&#39;App Started at port 5000&#39;));
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Kemudian jalankan dengan cara mengetikan &lt;code&gt;nodemon&lt;/code&gt; pada terminal, kemudian klik enter.&lt;/p&gt;
+
+&lt;p&gt;Buka postman untuk mengecek API ketikan &lt;code&gt;http://localhost:5000/api&lt;/code&gt; kemudian send. pastikan responya seperti ini&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    {
+        message: &#39;API with JSON Web Token&#39;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##Step Four- Generate token
+Langkah selanjutnya yaitu bagaimana cara si user mendapatkan akses untuk menggunakan API Service kalian,
+dengan JSON web token kita bisa men-generate token. caranaya tambahkan kode berikut di bawah&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    app.get(&#39;/api&#39;, (req, res) =&amp;gt; {...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;//generate token for login
+app.post(&#39;/api/login&#39;, (req, res) =&amp;gt; {
+    //Mock user
+    const user = {
+        id:&#39;15.11.8912&#39;,
+        name: &#39;Beta Priyoko&#39;,
+        email: &#39;beta.priyoko@students.amikom.ac.id&#39;,
+        class: &#39;15-IF-06&#39;
+    }
+
+    jwt.sign({user},&#39;secretkey&#39; ,{expiresIn:&#39;3600s&#39;},(err,token) =&amp;gt; {
+        res.json({
+            token
+        });
+    });
+});
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Perlu diketahui user diatas hanya contoh saja, user bisa kalian dapatkan dari database.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;javascript {expiresIn:&#39;3600s&#39;}&lt;/code&gt; artinya token akan kadaluarsa setelah 3600 detik.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;save kemudian akses &lt;code&gt;http://localhost:5000/api/login&lt;/code&gt; untuk mndapatkan token.&lt;/p&gt;
+
+&lt;p&gt;##Step Five
+Buat Routes yang hanya bisa diakses ketika token telah di verifikasi.
+tambahkan kode bertikut:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    //verify token to get access
+    app.post(&#39;/api/service&#39;,verifyToken,(req, res) =&amp;gt; {
+        jwt.verify(req.token, &#39;secretkey&#39;,(err, authData) =&amp;gt; { //to verify token
+            if(err){
+                res.sendStatus(403); //Forbiden
+            }else{
+                res.json({
+                    message: &#39;Access Granted&#39;, //Akses Diberikan
+                    authData
+                });
+            }
+        });
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ini hanya bisa diakses menggunakan token yang didapat.&lt;/p&gt;
+
+&lt;p&gt;##Step Six
+Buat fungsi untuk memverifikasi token.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    //verify token
+    function verifyToken(req, res, next){
+        //Get Auth Header Value
+        const bearerHeader = req.headers[&#39;authorization&#39;];
+        //check if bearerHeader undefined
+        if(bearerHeader !== &#39;undefined&#39;){
+            //get the token value
+            const bearer = bearerHeader.split(&#39; &#39;); //array [&#39;Authorization&#39;,&#39;&amp;lt;bearer_token&amp;gt;&#39;]
+            //get token from array
+            const bearerToken = bearer[1];
+            //set the token
+            req.token = bearerToken;
+            //next to middleware
+            next();
+        }else{
+            res.sendStatus(403);
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Sekian Tutorial singkat dari saya. Saya butuh masukan untuk membuat postingan selanjutnya lebih berkualitas.&lt;/p&gt;
+
+&lt;p&gt;kirim masukan ke : +6283867138187&lt;/p&gt;
+
+&lt;p&gt;and lets be friend.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Welcome, this is my first post</title>
       <link>https://ebetap.github.io/posts/my-first-post/</link>
       <pubDate>Tue, 27 Feb 2018 19:00:32 +0700</pubDate>
       
       <guid>https://ebetap.github.io/posts/my-first-post/</guid>
-      <description></description>
+      <description>&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;	console.log(&amp;quot;Welcome to my blog&amp;quot;);
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
     </item>
     
   </channel>
